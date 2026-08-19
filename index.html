@@ -1,0 +1,2518 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>FACILITA · Ferramentas</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%238B5CF6'/%3E%3Cstop offset='50%25' stop-color='%237C3AED'/%3E%3Cstop offset='100%25' stop-color='%235B21B6'/%3E%3C/linearGradient%3E%3Cfilter id='s' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeDropShadow dx='0' dy='2' stdDeviation='2' flood-color='%23000' flood-opacity='0.45'/%3E%3C/filter%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Cpath d='M18 14h28v10H30v8h14v10H30v18H18V14z' fill='%23fff' filter='url(%23s)'/%3E%3Cpath d='M18 14h28v10H30v8h14v10H30v18H18V14z' fill='none' stroke='%231E1B2E' stroke-width='1.5' opacity='0.35'/%3E%3C/svg%3E" />
+  <style>
+    /* ============================================================
+       FACILITA — Identidade visual inspirada na HatchBANK
+       Roxo principal + layout limpo de dashboard
+       ============================================================ */
+    :root {
+      --purple-900: #4C1D95;
+      --purple-800: #5B21B6;
+      --purple-700: #6D28D9;
+      --purple-600: #7C3AED;
+      --purple-500: #8B5CF6;
+      --purple-100: #EDE9FE;
+      --purple-50:  #F5F3FF;
+      --bg:         #F8F7FC;
+      --surface:    #FFFFFF;
+      --surface-alt:#F3F1F9;
+      --border:     #E8E4F3;
+      --border-strong: #D4CDE8;
+      --text:       #1E1B2E;
+      --text-muted: #6B6580;
+      --text-faint: #9B95B0;
+      --error:      #DC2626;
+      --success:    #059669;
+      --radius-sm:  8px;
+      --radius-md:  12px;
+      --radius-lg:  16px;
+      --radius-xl:  20px;
+      --shadow-sm:  0 1px 2px rgba(30, 27, 46, 0.04);
+      --shadow-card: 0 1px 3px rgba(30, 27, 46, 0.05), 0 8px 24px -12px rgba(76, 29, 149, 0.12);
+      --shadow-hero: 0 12px 32px -10px rgba(109, 40, 217, 0.35);
+      --sidebar-w:  260px;
+      --font:       "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      --font-mono:  "SF Mono", "Cascadia Mono", Consolas, "Roboto Mono", monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===================== LOGIN ===================== */
+    .login-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+      background: linear-gradient(145deg, #F5F3FF 0%, #EDE9FE 40%, #F8F7FC 100%);
+    }
+    .login-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 40px 36px;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: var(--shadow-card);
+      text-align: center;
+    }
+    .login-logo {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .login-logo__mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, var(--purple-600), var(--purple-800));
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      box-shadow: var(--shadow-hero);
+    }
+    .login-logo__text {
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: -0.02em;
+    }
+    .login-logo__text span { color: var(--purple-600); }
+    .login-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .login-sub {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-bottom: 28px;
+    }
+    .login-form { text-align: left; }
+
+    /* ===================== APP SHELL ===================== */
+    .app {
+      display: none;
+      min-height: 100vh;
+    }
+    .app.is-visible { display: flex; }
+
+    /* Sidebar */
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 40;
+      transition: transform 0.2s ease;
+    }
+    .sidebar__brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 22px 20px 18px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar__mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(145deg, var(--purple-600), var(--purple-800));
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+    .sidebar__name {
+      font-weight: 700;
+      font-size: 15px;
+      letter-spacing: -0.02em;
+    }
+    .sidebar__name span { color: var(--purple-600); }
+    .sidebar__nav {
+      flex: 1;
+      padding: 16px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      overflow-y: auto;
+    }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      border-radius: var(--radius-md);
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: var(--font);
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      width: 100%;
+      transition: background 0.15s, color 0.15s;
+    }
+    .nav-item:hover {
+      background: var(--purple-50);
+      color: var(--purple-700);
+    }
+    .nav-item.is-active {
+      background: var(--purple-100);
+      color: var(--purple-800);
+    }
+    .nav-item svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      opacity: 0.85;
+    }
+    .sidebar__footer {
+      padding: 14px 16px;
+      border-top: 1px solid var(--border);
+      font-size: 11.5px;
+      color: var(--text-faint);
+      text-align: center;
+    }
+
+    /* Main */
+    .main {
+      flex: 1;
+      margin-left: var(--sidebar-w);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 28px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 30;
+    }
+    .topbar__title {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .topbar__actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .content {
+      flex: 1;
+      padding: 28px;
+      max-width: 1280px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* Mobile sidebar toggle */
+    .menu-toggle {
+      display: none;
+      border: 1px solid var(--border-strong);
+      background: var(--surface);
+      border-radius: var(--radius-sm);
+      width: 40px;
+      height: 40px;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(30, 27, 46, 0.35);
+      z-index: 35;
+    }
+    .sidebar-overlay.is-open { display: block; }
+
+    @media (max-width: 900px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      .sidebar.is-open {
+        transform: translateX(0);
+      }
+      .main { margin-left: 0; }
+      .menu-toggle { display: flex; }
+      .content { padding: 20px 16px; }
+    }
+
+    /* ===================== BOTÕES ===================== */
+    .btn {
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      padding: 10px 16px;
+      font-family: var(--font);
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.08s, background 0.15s, box-shadow 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn--block { width: 100%; justify-content: center; padding: 12px; font-size: 14.5px; }
+    .btn--primary {
+      background: var(--purple-600);
+      color: #fff;
+      box-shadow: 0 6px 16px -6px rgba(124, 58, 237, 0.5);
+    }
+    .btn--primary:hover { background: var(--purple-700); }
+    .btn--ghost {
+      background: var(--surface);
+      border-color: var(--border-strong);
+      color: var(--text);
+    }
+    .btn--ghost:hover { background: var(--surface-alt); }
+    .btn--danger {
+      background: #FEF2F2;
+      border-color: #FECACA;
+      color: var(--error);
+    }
+    .btn--danger:hover { background: #FEE2E2; }
+    .btn--sm {
+      padding: 7px 12px;
+      font-size: 12.5px;
+    }
+
+    /* ===================== CAMPOS ===================== */
+    .field { margin-bottom: 16px; }
+    .field label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .field input[type="text"],
+    .field input[type="password"],
+    .field input[type="number"],
+    .field input[type="url"] {
+      width: 100%;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      padding: 11px 12px;
+      font-family: var(--font-mono);
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--text);
+      background: var(--surface-alt);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .field input:focus {
+      outline: none;
+      border-color: var(--purple-500);
+      box-shadow: 0 0 0 3px var(--purple-100);
+      background: var(--surface);
+    }
+    .field input.is-invalid { border-color: var(--error); }
+    .field__prefix,
+    .field__suffix {
+      display: flex;
+      align-items: center;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      background: var(--surface-alt);
+      overflow: hidden;
+    }
+    .field__prefix span,
+    .field__suffix span {
+      padding: 0 12px;
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .nc-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .nc-row .field__prefix { flex: 1; margin: 0; }
+    .nc-row__remove {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+    }
+    .nc-row__remove:hover { color: var(--error); background: #FEF2F2; }
+    .ia-msg {
+      max-width: 82%;
+      padding: 10px 13px;
+      border-radius: var(--radius-sm);
+      font-size: 13.5px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .ia-msg--user {
+      align-self: flex-end;
+      background: var(--purple-600);
+      color: #fff;
+    }
+    .ia-msg--assistant {
+      align-self: flex-start;
+      background: var(--surface-alt);
+      border: 1px solid var(--border-strong);
+      color: var(--text);
+    }
+    .ia-msg--error {
+      align-self: flex-start;
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      color: var(--error);
+    }
+    .field__prefix input,
+    .field__suffix input {
+      border: none !important;
+      background: transparent !important;
+      box-shadow: none !important;
+    }
+    .field__prefix:focus-within,
+    .field__suffix:focus-within {
+      border-color: var(--purple-500);
+      box-shadow: 0 0 0 3px var(--purple-100);
+      background: var(--surface);
+    }
+    .field__error {
+      display: block;
+      min-height: 15px;
+      color: var(--error);
+      font-size: 11.5px;
+      margin-top: 5px;
+    }
+
+    /* ===================== PAINÉIS / CARDS ===================== */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      box-shadow: var(--shadow-card);
+    }
+    .panel__title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      letter-spacing: -0.01em;
+    }
+    .panel__header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .panel__subtitle {
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+    .panel__note {
+      margin-top: 18px;
+      font-size: 12px;
+      color: var(--text-faint);
+      line-height: 1.5;
+      border-top: 1px dashed var(--border);
+      padding-top: 14px;
+    }
+
+    /* ===================== ABAS DE CONTEÚDO ===================== */
+    .tab-pane { display: none; }
+    .tab-pane.is-active { display: block; }
+
+    /* ===================== CONSULTAS DE MARGEM ===================== */
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+    .link-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .link-card:hover {
+      border-color: var(--purple-500);
+      box-shadow: var(--shadow-card);
+    }
+    .link-card__name {
+      font-weight: 700;
+      font-size: 14.5px;
+      color: var(--text);
+      word-break: break-word;
+    }
+    .link-card__url {
+      font-size: 12px;
+      color: var(--text-faint);
+      font-family: var(--font-mono);
+      word-break: break-all;
+      line-height: 1.4;
+    }
+    .link-card__actions {
+      display: flex;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 8px;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--text-muted);
+      background: var(--surface);
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius-lg);
+    }
+    .empty-state p { margin-bottom: 8px; font-size: 14px; }
+    .empty-state small { font-size: 12.5px; color: var(--text-faint); }
+
+    .add-link-form {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr auto;
+      gap: 12px;
+      align-items: end;
+    }
+    @media (max-width: 700px) {
+      .add-link-form { grid-template-columns: 1fr; }
+    }
+
+    /* Search bar for planilhas / links */
+    .search-bar {
+      margin-bottom: 16px;
+      position: relative;
+    }
+    .search-bar input {
+      width: 100%;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      padding: 11px 14px 11px 40px;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      background: var(--surface);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .search-bar input:focus {
+      outline: none;
+      border-color: var(--purple-500);
+      box-shadow: 0 0 0 3px var(--purple-100);
+    }
+    .search-bar__icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      color: var(--text-faint);
+      pointer-events: none;
+    }
+    .search-bar__count {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--text-faint);
+    }
+
+    /* ===================== SIMULADOR ===================== */
+    .layout-sim {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+    @media (max-width: 960px) {
+      .layout-sim { grid-template-columns: 1fr; }
+    }
+
+    .results { display: flex; flex-direction: column; gap: 18px; }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      box-shadow: var(--shadow-sm);
+    }
+    .card__label {
+      margin: 0 0 6px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-faint);
+    }
+    .card__value {
+      margin: 0;
+      font-family: var(--font-mono);
+      font-size: 18px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+    .card__value--lg { font-size: 24px; color: var(--purple-800); }
+
+    .card--hero {
+      background: linear-gradient(145deg, var(--purple-800) 0%, var(--purple-600) 55%, #7C3AED 100%);
+      border: none;
+      color: #fff;
+      padding: 24px 26px 20px;
+      box-shadow: var(--shadow-hero);
+      position: relative;
+      overflow: hidden;
+    }
+    .card--hero::after {
+      content: "";
+      position: absolute;
+      right: -50px;
+      top: -50px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,0.12), transparent 70%);
+    }
+    .card--hero .card__label { color: rgba(255,255,255,0.7); }
+    .hero__values {
+      display: flex;
+      align-items: baseline;
+      gap: 18px;
+      flex-wrap: wrap;
+      position: relative;
+    }
+    .hero__value { display: flex; align-items: baseline; gap: 6px; }
+    .hero__number {
+      font-family: var(--font-mono);
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    .hero__unit {
+      font-size: 12.5px;
+      color: rgba(255,255,255,0.75);
+      font-weight: 600;
+    }
+    .hero__divider {
+      width: 1px;
+      height: 30px;
+      background: rgba(255,255,255,0.28);
+    }
+    .hero__hint {
+      margin: 12px 0 0;
+      font-size: 11.5px;
+      color: rgba(255,255,255,0.65);
+      position: relative;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .card--span2 { grid-column: span 2; }
+    .card--destaque {
+      background: var(--purple-50);
+      border-color: #DDD6FE;
+    }
+    .card--destaque .card__label { color: var(--purple-700); }
+    .card--destaque .card__value { color: var(--purple-800); }
+    @media (max-width: 1100px) {
+      .card-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 520px) {
+      .card-grid { grid-template-columns: 1fr 1fr; }
+      .hero__number { font-size: 26px; }
+    }
+
+    /* ===================== MARGEM DISPONÍVEL ===================== */
+    .card--hero.is-blocked {
+      background: linear-gradient(145deg, #991B1B 0%, #DC2626 55%, #EF4444 100%);
+      box-shadow: 0 12px 32px -10px rgba(220, 38, 38, 0.35);
+    }
+    .status-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .status-banner__dot {
+      flex: none;
+      width: 12px;
+      height: 12px;
+      margin-top: 4px;
+      border-radius: 50%;
+      background: var(--text-faint);
+    }
+    .status-banner.is-allowed .status-banner__dot { background: var(--success); box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.15); }
+    .status-banner.is-blocked .status-banner__dot { background: var(--error); box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.15); }
+    .status-banner.is-allowed { border-color: #A7F3D0; background: #ECFDF5; }
+    .status-banner.is-blocked { border-color: #FECACA; background: #FEF2F2; }
+    .status-banner__title {
+      font-size: 14.5px;
+      font-weight: 700;
+      margin: 0 0 2px;
+    }
+    .status-banner.is-allowed .status-banner__title { color: #047857; }
+    .status-banner.is-blocked .status-banner__title { color: #B91C1C; }
+    .status-banner__motivo {
+      margin: 0;
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 9px 0;
+      font-size: 13px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+    }
+    .breakdown-row:first-of-type { border-top: none; padding-top: 2px; }
+    .breakdown-row span:last-child {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .panel--schedule { margin-top: 20px; }
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      font-family: var(--font-mono);
+      min-width: 560px;
+    }
+    thead th {
+      position: sticky;
+      top: 0;
+      background: var(--surface-alt);
+      color: var(--text-muted);
+      font-family: var(--font);
+      font-weight: 700;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      text-align: right;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    thead th:first-child { text-align: left; }
+    tbody td {
+      text-align: right;
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--border);
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    tbody td:first-child {
+      text-align: left;
+      font-family: var(--font);
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: var(--purple-50); }
+
+    .footer-note {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 11.5px;
+      color: var(--text-faint);
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.55;
+    }
+
+    /* ===================== HISTÓRICO ===================== */
+    .hist-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .hist-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .hist-item__meta {
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+    .hist-item__values {
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+      font-weight: 600;
+    }
+    .hist-item__actions { display: flex; gap: 6px; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--purple-800);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      font-size: 13.5px;
+      font-weight: 600;
+      box-shadow: var(--shadow-hero);
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.2s, transform 0.2s;
+      z-index: 100;
+      pointer-events: none;
+    }
+    .toast.is-show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media print {
+      .sidebar, .topbar, .menu-toggle, .sidebar-overlay, .calc-floating-btn, .calc-popup { display: none !important; }
+      .main { margin-left: 0; }
+      .content { padding: 0; }
+      body { background: #fff; }
+      .card--hero { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+
+    /* ===================== CALCULADORA FLUTUANTE ===================== */
+    .calc-floating-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, var(--purple-600), var(--purple-800));
+      color: #fff;
+      border: none;
+      box-shadow: 0 8px 24px rgba(109, 40, 217, 0.4);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .calc-floating-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 10px 28px rgba(109, 40, 217, 0.5);
+    }
+    .calc-floating-btn svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    .calc-popup {
+      display: none;
+      position: fixed;
+      bottom: 90px;
+      right: 24px;
+      width: 310px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 12px 32px rgba(30, 27, 46, 0.2);
+      z-index: 2000;
+      overflow: hidden;
+      flex-direction: column;
+      animation: calcPopIn 0.2s ease-out forwards;
+    }
+    .calc-popup.is-open {
+      display: flex;
+    }
+    @keyframes calcPopIn {
+      from { opacity: 0; transform: translateY(15px) scale(0.95); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .calc-header {
+      background: linear-gradient(145deg, var(--purple-800), var(--purple-600));
+      color: #fff;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .calc-close-btn {
+      background: transparent;
+      border: none;
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      line-height: 1;
+      opacity: 0.8;
+    }
+    .calc-close-btn:hover { opacity: 1; }
+    .calc-body {
+      padding: 16px;
+    }
+    .calc-display {
+      width: 100%;
+      height: 48px;
+      background: var(--surface-alt);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      margin-bottom: 14px;
+      text-align: right;
+      padding: 0 12px;
+      font-family: var(--font-mono);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      outline: none;
+    }
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .calc-btn {
+      height: 42px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      font-family: var(--font);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.1s, transform 0.05s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .calc-btn:hover {
+      background: var(--purple-50);
+      color: var(--purple-700);
+    }
+    .calc-btn:active {
+      transform: scale(0.96);
+    }
+    .calc-btn--op {
+      background: var(--surface-alt);
+      color: var(--purple-600);
+      font-weight: 700;
+    }
+    .calc-btn--eq {
+      background: var(--purple-600);
+      color: #fff;
+      font-weight: 700;
+    }
+    .calc-btn--eq:hover {
+      background: var(--purple-700);
+      color: #fff;
+    }
+    .calc-btn--clear {
+      background: #FEF2F2;
+      color: var(--error);
+      border-color: #FECACA;
+    }
+    .calc-btn--clear:hover {
+      background: #FEE2E2;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===================== LOGIN ===================== -->
+  <div class="login-screen" id="telaLogin">
+    <div class="login-card">
+      <div class="login-logo">
+        <span class="login-logo__mark">F</span>
+        <div class="login-logo__text">FACILITA</div>
+      </div>
+      <h1 class="login-title">Acesso Restrito</h1>
+      <p class="login-sub">Insira a senha para liberar as ferramentas.</p>
+      <div class="login-form">
+        <div class="field">
+          <label for="senhaAcesso">Senha do Sistema</label>
+          <input type="password" id="senhaAcesso" placeholder="••••••••" autocomplete="current-password" />
+          <small class="field__error" id="erroSenha"></small>
+        </div>
+        <button id="btnEntrar" class="btn btn--primary btn--block" type="button">Entrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== APP ===================== -->
+  <div class="app" id="conteudoApp">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar__brand">
+        <span class="sidebar__mark">F</span>
+        <div class="sidebar__name">FACILITA</div>
+      </div>
+      <nav class="sidebar__nav">
+        <button class="nav-item is-active" data-tab="links" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+          Consultas de Margem
+        </button>
+        <button class="nav-item" data-tab="margem" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Margem Disponível
+        </button>
+        <button class="nav-item" data-tab="simulador" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="12" y2="14"/></svg>
+          Simulador
+        </button>
+        <button class="nav-item" data-tab="planilhas" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><line x1="10" y1="9" x2="10" y2="9"/></svg>
+          Planilhas Google
+        </button>
+        <button class="nav-item" data-tab="historico" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Histórico
+        </button>
+        <button class="nav-item" data-tab="ia" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a5 5 0 0 1 5 5v1a5 5 0 0 1-10 0V7a5 5 0 0 1 5-5z"/><path d="M8 14v2a4 4 0 0 0 8 0v-2"/><line x1="12" y1="20" x2="12" y2="22"/></svg>
+          Assistente IA
+        </button>
+      </nav>
+      <div class="sidebar__footer">Ferramentas internas · offline</div>
+    </aside>
+
+    <div class="main">
+      <header class="topbar">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <button class="menu-toggle" id="menuToggle" type="button" aria-label="Abrir menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <h1 class="topbar__title" id="topbarTitle">Consultas de Margem</h1>
+        </div>
+        <div class="topbar__actions" id="topbarActions">
+          <!-- botões dinâmicos por aba -->
+        </div>
+      </header>
+
+      <div class="content">
+
+        <!-- ========== ABA: CONSULTAS DE MARGEM ========== -->
+        <section class="tab-pane is-active" id="tab-links">
+          <div class="panel" style="margin-bottom:20px;">
+            <h2 class="panel__title">Adicionar site de consulta</h2>
+            <div class="add-link-form">
+              <div class="field" style="margin:0;">
+                <label for="novoLinkNome">Nome</label>
+                <input type="text" id="novoLinkNome" placeholder="Ex: Dataprev, INSS, Averbadora..." />
+              </div>
+              <div class="field" style="margin:0;">
+                <label for="novoLinkUrl">URL</label>
+                <input type="url" id="novoLinkUrl" placeholder="https://..." />
+              </div>
+              <button class="btn btn--primary" id="btnAddLink" type="button">Salvar link</button>
+            </div>
+            <p class="panel__note">Os links ficam salvos neste navegador. Você pode adicionar, editar e remover a qualquer momento.</p>
+          </div>
+
+          <div id="linksContainer">
+            <!-- cards gerados via JS -->
+          </div>
+        </section>
+
+        <!-- ========== ABA: MARGEM DISPONÍVEL ========== -->
+        <section class="tab-pane" id="tab-margem">
+          <div class="layout-sim">
+            <section class="panel panel--form">
+              <h2 class="panel__title">Dados do cliente</h2>
+              <div class="field">
+                <label for="margemSalario">Vencimentos totais</label>
+                <div class="field__prefix">
+                  <span>R$</span>
+                  <input type="text" id="margemSalario" inputmode="decimal" placeholder="0,00" aria-describedby="erroMargemSalario" autocomplete="off" />
+                </div>
+                <small class="field__error" id="erroMargemSalario"></small>
+              </div>
+              <div class="field" id="margemNaoConsideradosWrap">
+                <label>Valores não considerados</label>
+                <div id="margemNaoConsideradosLista"></div>
+                <button type="button" class="btn btn--ghost btn--sm" id="btnAddNaoConsiderado" style="margin-top:4px;">+ Adicionar valor não considerado</button>
+                <small class="field__error" id="erroMargemNaoConsiderados"></small>
+              </div>
+              <div class="field">
+                <div class="card" style="background:var(--surface-alt);">
+                  <p class="card__label">Vencimento efetivo</p>
+                  <p class="card__value" id="margemOutVencimentoEfetivo">R$ 0,00</p>
+                </div>
+              </div>
+              <div class="field">
+                <label for="margemDescontos">Descontos atuais</label>
+                <div class="field__prefix">
+                  <span>R$</span>
+                  <input type="text" id="margemDescontos" inputmode="decimal" placeholder="0,00" aria-describedby="erroMargemDescontos" autocomplete="off" />
+                </div>
+                <small class="field__error" id="erroMargemDescontos"></small>
+              </div>
+              <p class="panel__note">A margem respeita duas travas ao mesmo tempo: endividamento máximo de 70% do vencimento efetivo e líquido mínimo de R$ 1.000,00. O resultado é sempre a menor das duas.</p>
+            </section>
+
+            <section class="results">
+              <div class="card card--hero" id="margemHero">
+                <p class="card__label">Margem disponível</p>
+                <div class="hero__values">
+                  <div class="hero__value">
+                    <span class="hero__number" id="margemOutDisponivel">R$ 0,00</span>
+                  </div>
+                </div>
+                <p class="hero__hint">Menor valor entre as duas travas de endividamento</p>
+              </div>
+
+              <div class="status-banner" id="margemStatusBanner">
+                <span class="status-banner__dot" id="margemStatusDot"></span>
+                <div>
+                  <p class="status-banner__title" id="margemStatusTitulo">Aguardando dados</p>
+                  <p class="status-banner__motivo" id="margemStatusMotivo">Informe os vencimentos totais e os descontos atuais.</p>
+                </div>
+              </div>
+
+              <div class="card-grid">
+                <div class="card">
+                  <p class="card__label">Endividamento atual</p>
+                  <p class="card__value" id="margemOutEndividamento">0,00%</p>
+                </div>
+                <div class="card">
+                  <p class="card__label">Líquido atual</p>
+                  <p class="card__value" id="margemOutLiquido">R$ 0,00</p>
+                </div>
+                <div class="card">
+                  <p class="card__label">Limite de descontos — 70%</p>
+                  <p class="card__value" id="margemOutLimite70">R$ 0,00</p>
+                </div>
+                <div class="card">
+                  <p class="card__label">Margem pela trava de 70%</p>
+                  <p class="card__value" id="margemOutMargem70">R$ 0,00</p>
+                </div>
+                <div class="card card--span2">
+                  <p class="card__label">Margem pelo líquido mínimo</p>
+                  <p class="card__value" id="margemOutMargemLiquido">R$ 0,00</p>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <p class="footer-note">Uso interno durante atendimento. Não altera as regras nem os dados da calculadora de propostas.</p>
+        </section>
+
+        <!-- ========== ABA: SIMULADOR ========== -->
+        <section class="tab-pane" id="tab-simulador">
+          <div class="layout-sim">
+            <section class="panel panel--form">
+              <h2 class="panel__title">Dados da simulação</h2>
+              <div class="field">
+                <label for="valorParcela">Valor da parcela</label>
+                <div class="field__prefix">
+                  <span>R$</span>
+                  <input type="text" id="valorParcela" inputmode="decimal" value="1.000,00" aria-describedby="erroValor" />
+                </div>
+                <small class="field__error" id="erroValor"></small>
+              </div>
+              <div class="field">
+                <label for="parcelas">Quantidade de parcelas</label>
+                <input type="number" id="parcelas" min="1" max="360" step="1" value="60" aria-describedby="erroParcelas" />
+                <small class="field__error" id="erroParcelas"></small>
+              </div>
+              <div class="field">
+                <label for="taxaMensal">Taxa nominal mensal</label>
+                <div class="field__suffix">
+                  <input type="text" id="taxaMensal" inputmode="decimal" value="5,00" aria-describedby="erroTaxa" />
+                  <span>% a.m.</span>
+                </div>
+                <small class="field__error" id="erroTaxa"></small>
+              </div>
+              <p class="panel__note">Informe a parcela que cabe no bolso: o simulador calcula quanto será liberado (IOF + Tabela Price + CET).</p>
+            </section>
+
+            <section class="results">
+              <div class="card card--hero">
+                <p class="card__label">Custo Efetivo Total</p>
+                <div class="hero__values">
+                  <div class="hero__value">
+                    <span class="hero__number" id="outCetMensal">—</span>
+                    <span class="hero__unit">ao mês</span>
+                  </div>
+                  <div class="hero__divider"></div>
+                  <div class="hero__value">
+                    <span class="hero__number" id="outCetAnual">—</span>
+                    <span class="hero__unit">ao ano</span>
+                  </div>
+                </div>
+                <p class="hero__hint">Calculado pela Taxa Interna de Retorno do fluxo de pagamentos</p>
+              </div>
+
+              <div class="card-grid">
+                <div class="card card--span2 card--destaque">
+                  <p class="card__label">Valor Liberado</p>
+                  <p class="card__value card__value--lg" id="outValorLiquido">R$ 0,00</p>
+                </div>
+                <div class="card">
+                  <p class="card__label">IOF</p>
+                  <p class="card__value" id="outIof">R$ 0,00</p>
+                </div>
+                <div class="card">
+                  <p class="card__label">Valor Principal</p>
+                  <p class="card__value" id="outPrincipal">R$ 0,00</p>
+                </div>
+                <div class="card">
+                  <p class="card__label">Parcelas</p>
+                  <p class="card__value" id="outParcelasQtd">0</p>
+                </div>
+                <div class="card">
+                  <p class="card__label">Valor da Parcela</p>
+                  <p class="card__value" id="outParcela">R$ 0,00</p>
+                </div>
+                <div class="card">
+                  <p class="card__label">Taxa Nominal</p>
+                  <p class="card__value" id="outTaxaNominal">0,00% a.m.</p>
+                </div>
+                <div class="card">
+                  <p class="card__label">Taxa Anual (nominal)</p>
+                  <p class="card__value" id="outTaxaAnual">0,00%</p>
+                </div>
+                <div class="card">
+                  <p class="card__label">Total de Juros</p>
+                  <p class="card__value" id="outJuros">R$ 0,00</p>
+                </div>
+                <div class="card card--span2">
+                  <p class="card__label">Valor Total Pago</p>
+                  <p class="card__value card__value--lg" id="outValorTotal">R$ 0,00</p>
+                </div>
+              </div>
+
+              <div class="card card--breakdown">
+                <p class="card__label">Composição do IOF</p>
+                <div class="breakdown-row">
+                  <span>IOF adicional (0,38% sobre o valor liberado)</span>
+                  <span id="outIofAdicional">R$ 0,00</span>
+                </div>
+                <div class="breakdown-row">
+                  <span>IOF diário (0,0082% a.d., limitado a 365 dias)</span>
+                  <span id="outIofDiario">R$ 0,00</span>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <section class="panel panel--schedule">
+            <div class="panel__header">
+              <h2 class="panel__title">Cronograma · Tabela Price</h2>
+              <p class="panel__subtitle" id="scheduleSubtitle"></p>
+            </div>
+            <div class="table-wrap">
+              <table id="tabelaCronograma">
+                <thead>
+                  <tr>
+                    <th>Parcela</th>
+                    <th>Amortização</th>
+                    <th>Juros</th>
+                    <th>Valor da Parcela</th>
+                    <th>Saldo Devedor</th>
+                  </tr>
+                </thead>
+                <tbody id="corpoCronograma"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <p class="footer-note">Simulação de caráter ilustrativo. Valores sujeitos a alteração conforme condições comerciais e regras vigentes de IOF.</p>
+        </section>
+
+        <!-- ========== ABA: PLANILHAS GOOGLE ========== -->
+        <section class="tab-pane" id="tab-planilhas">
+          <div class="panel" style="margin-bottom:20px;">
+            <h2 class="panel__title">Adicionar planilha do Google Sheets</h2>
+            <div class="add-link-form">
+              <div class="field" style="margin:0;">
+                <label for="novaPlanilhaNome">Nome</label>
+                <input type="text" id="novaPlanilhaNome" placeholder="Ex: Margens SIAPE, Tabela de taxas..." />
+              </div>
+              <div class="field" style="margin:0;">
+                <label for="novaPlanilhaUrl">URL do Google Sheets</label>
+                <input type="url" id="novaPlanilhaUrl" placeholder="https://docs.google.com/spreadsheets/d/..." />
+              </div>
+              <button class="btn btn--primary" id="btnAddPlanilha" type="button">Salvar planilha</button>
+            </div>
+            <p class="panel__note">Cole o link da planilha (compartilhada ou da sua conta). Os links ficam salvos neste navegador. Use a busca abaixo para localizar rapidamente.</p>
+          </div>
+
+          <div class="search-bar">
+            <svg class="search-bar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="search" id="buscaPlanilha" placeholder="Pesquisar planilha por nome..." autocomplete="off" />
+            <div class="search-bar__count" id="planilhaCount"></div>
+          </div>
+
+          <div id="planilhasContainer">
+            <!-- cards gerados via JS -->
+          </div>
+        </section>
+
+        <!-- ========== ABA: HISTÓRICO ========== -->
+        <section class="tab-pane" id="tab-historico">
+          <div class="panel" style="margin-bottom:16px;">
+            <div class="panel__header" style="margin-bottom:0;">
+              <h2 class="panel__title" style="margin:0;">Últimas simulações</h2>
+              <button class="btn btn--ghost btn--sm" id="btnLimparHist" type="button">Limpar histórico</button>
+            </div>
+          </div>
+          <div id="histContainer" class="hist-list">
+            <!-- itens via JS -->
+          </div>
+        </section>
+
+        <!-- ========== ABA: ASSISTENTE IA ========== -->
+        <section class="tab-pane" id="tab-ia">
+          <div class="panel" style="margin-bottom:16px;">
+            <h2 class="panel__title">Chave da API do Gemini</h2>
+            <div class="add-link-form">
+              <div class="field" style="margin:0;flex:1;">
+                <label for="iaApiKey">Chave da API</label>
+                <input type="password" id="iaApiKey" placeholder="Cole sua chave do Google AI Studio" autocomplete="off" />
+              </div>
+              <button class="btn btn--primary" id="btnSalvarIaKey" type="button">Salvar chave</button>
+              <button class="btn btn--ghost" id="btnLimparIaKey" type="button">Remover</button>
+            </div>
+            <p class="panel__note">A chave fica salva apenas neste navegador (localStorage) e nunca é gravada no código-fonte nem enviada ao GitHub. Se você já compartilhou uma chave em outro lugar (chat, print, etc.), gere uma nova em <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> e revogue a antiga.</p>
+            <p class="field__error" id="iaKeyStatus" style="margin-top:6px;"></p>
+          </div>
+
+          <div class="panel">
+            <h2 class="panel__title">Conversa</h2>
+            <div id="iaChatWindow" class="hist-list" style="min-height:280px;max-height:440px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:4px;"></div>
+            <div class="add-link-form" style="margin-top:14px;">
+              <div class="field" style="margin:0;flex:1;">
+                <label for="iaInput">Mensagem</label>
+                <input type="text" id="iaInput" placeholder="Pergunte algo ao assistente..." autocomplete="off" />
+              </div>
+              <button class="btn btn--primary" id="btnIaEnviar" type="button">Enviar</button>
+              <button class="btn btn--ghost" id="btnIaLimparChat" type="button">Limpar conversa</button>
+            </div>
+            <small class="field__error" id="erroIaChat"></small>
+          </div>
+
+          <p class="footer-note">Assistente experimental. As respostas vêm da API do Gemini (Google) e não têm relação com as regras internas do FACILITA.</p>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Botão Flutuante da Calculadora -->
+  <button class="calc-floating-btn" id="calcToggleBtn" type="button" aria-label="Abrir Calculadora">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg>
+  </button>
+
+  <!-- Janela Pop-up da Calculadora -->
+  <div class="calc-popup" id="calcPopup">
+    <div class="calc-header">
+      <span>Calculadora</span>
+      <button class="calc-close-btn" id="calcCloseBtn" type="button">&times;</button>
+    </div>
+    <div class="calc-body">
+      <input type="text" class="calc-display" id="calcDisplay" value="0" readonly />
+      <div class="calc-grid">
+        <button class="calc-btn calc-btn--clear" onclick="calcClear()">C</button>
+        <button class="calc-btn calc-btn--op" onclick="calcAppend('/')">&divide;</button>
+        <button class="calc-btn calc-btn--op" onclick="calcAppend('*')">&times;</button>
+        <button class="calc-btn calc-btn--op" onclick="calcBackspace()">&5;</button>
+
+        <button class="calc-btn" onclick="calcAppend('7')">7</button>
+        <button class="calc-btn" onclick="calcAppend('8')">8</button>
+        <button class="calc-btn" onclick="calcAppend('9')">9</button>
+        <button class="calc-btn calc-btn--op" onclick="calcAppend('-')">-</button>
+
+        <button class="calc-btn" onclick="calcAppend('4')">4</button>
+        <button class="calc-btn" onclick="calcAppend('5')">5</button>
+        <button class="calc-btn" onclick="calcAppend('6')">6</button>
+        <button class="calc-btn calc-btn--op" onclick="calcAppend('+')">+</button>
+
+        <button class="calc-btn" onclick="calcAppend('1')">1</button>
+        <button class="calc-btn" onclick="calcAppend('2')">2</button>
+        <button class="calc-btn" onclick="calcAppend('3')">3</button>
+        <button class="calc-btn calc-btn--eq" style="grid-row: span 2; height: 100%;" onclick="calcCalculate()">=</button>
+
+        <button class="calc-btn" style="grid-column: span 2;" onclick="calcAppend('0')">0</button>
+        <button class="calc-btn" onclick="calcAppend('.')">,</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+  "use strict";
+
+  /* ================================================================
+     CONFIG
+     ================================================================ */
+  const SENHA_CORRETA = "1025";
+  const STORAGE_LINKS = "hatch_admin_links";
+  const STORAGE_SHEETS = "hatch_admin_sheets";
+  const STORAGE_HIST  = "hatch_admin_hist";
+  const MAX_HIST = 30;
+
+  /* ================================================================
+     LOGIN
+     ================================================================ */
+  const inputSenha = document.getElementById("senhaAcesso");
+  const btnEntrar  = document.getElementById("btnEntrar");
+  const erroSenha  = document.getElementById("erroSenha");
+  const telaLogin  = document.getElementById("telaLogin");
+  const conteudoApp = document.getElementById("conteudoApp");
+
+  function verificarAcesso() {
+    if (inputSenha.value === SENHA_CORRETA) {
+      telaLogin.style.display = "none";
+      conteudoApp.classList.add("is-visible");
+      initApp();
+    } else {
+      erroSenha.textContent = "Senha incorreta. Tente novamente.";
+      inputSenha.classList.add("is-invalid");
+      inputSenha.focus();
+    }
+  }
+  btnEntrar.addEventListener("click", verificarAcesso);
+  inputSenha.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") verificarAcesso();
+  });
+
+  /* ================================================================
+     NAV / TABS
+     ================================================================ */
+  const titles = {
+    links: "Consultas de Margem",
+    margem: "Margem Disponível",
+    simulador: "Simulador de Empréstimo",
+    planilhas: "Planilhas Google",
+    historico: "Histórico de Simulações",
+    ia: "Assistente IA"
+  };
+
+  function switchTab(tabId) {
+    document.querySelectorAll(".nav-item").forEach(el => {
+      el.classList.toggle("is-active", el.dataset.tab === tabId);
+    });
+    document.querySelectorAll(".tab-pane").forEach(el => {
+      el.classList.toggle("is-active", el.id === "tab-" + tabId);
+    });
+    document.getElementById("topbarTitle").textContent = titles[tabId] || "";
+    renderTopbarActions(tabId);
+    closeSidebar();
+    if (tabId === "historico") renderHistorico();
+    if (tabId === "planilhas") {
+      document.getElementById("buscaPlanilha").value = "";
+      renderPlanilhas();
+    }
+  }
+
+  document.querySelectorAll(".nav-item").forEach(btn => {
+    btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+  });
+
+  function renderTopbarActions(tabId) {
+    const box = document.getElementById("topbarActions");
+    box.innerHTML = "";
+    if (tabId === "links") {
+      box.innerHTML = `
+        <button class="btn btn--ghost btn--sm" id="btnRestaurarLinks" type="button">Restaurar padrão</button>
+      `;
+      document.getElementById("btnRestaurarLinks").addEventListener("click", () => {
+        if (confirm("Restaurar a lista padrão de sites? Os links adicionados manualmente serão substituídos.")) {
+          saveLinks(LINKS_PADRAO.slice());
+          renderLinks();
+          showToast("Lista padrão restaurada");
+        }
+      });
+    }
+    if (tabId === "simulador") {
+      box.innerHTML = `
+        <button class="btn btn--ghost btn--sm" id="btnLimparSim" type="button">Limpar</button>
+        <button class="btn btn--ghost btn--sm" id="btnImprimir" type="button">Imprimir</button>
+        <button class="btn btn--primary btn--sm" id="btnPdf" type="button">Exportar PDF</button>
+        <button class="btn btn--primary btn--sm" id="btnSalvarHist" type="button">Salvar no histórico</button>
+      `;
+      document.getElementById("btnLimparSim").addEventListener("click", limparSimulacao);
+      document.getElementById("btnImprimir").addEventListener("click", () => window.print());
+      document.getElementById("btnPdf").addEventListener("click", () => window.print());
+      document.getElementById("btnSalvarHist").addEventListener("click", salvarNoHistorico);
+    }
+    if (tabId === "planilhas") {
+      box.innerHTML = `
+        <button class="btn btn--ghost btn--sm" id="btnLimparBuscaPlanilha" type="button">Limpar busca</button>
+      `;
+      document.getElementById("btnLimparBuscaPlanilha").addEventListener("click", () => {
+        document.getElementById("buscaPlanilha").value = "";
+        renderPlanilhas();
+        showToast("Busca limpa");
+      });
+    }
+  }
+
+  /* Sidebar mobile */
+  const sidebar = document.getElementById("sidebar");
+  const overlay = document.getElementById("sidebarOverlay");
+  document.getElementById("menuToggle").addEventListener("click", () => {
+    sidebar.classList.toggle("is-open");
+    overlay.classList.toggle("is-open");
+  });
+  overlay.addEventListener("click", closeSidebar);
+  function closeSidebar() {
+    sidebar.classList.remove("is-open");
+    overlay.classList.remove("is-open");
+  }
+
+  /* ================================================================
+     TOAST
+     ================================================================ */
+  function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("is-show");
+    setTimeout(() => t.classList.remove("is-show"), 2200);
+  }
+
+  /* ================================================================
+     CONSULTAS DE MARGEM (links com localStorage)
+     ================================================================ */
+  const LINKS_PADRAO = [
+    { nome: "SICON", url: "https://sicon.grupofasitec.com.br/Login.aspx" },
+    { nome: "Consigx", url: "https://saec.consigx.com.br/Login.aspx" },
+    { nome: "Consigplus", url: "https://consigplusbr.com/login.xhtml" },
+    { nome: "Consigtec", url: "https://consigtec.org.br/login.xhtml" },
+    { nome: "MetaConsig", url: "https://portal.metaconsig.com.br/Account/Login?ReturnUrl=%2fDefault%2fExtratosWizard#!1" },
+    { nome: "SafeConsig SÃO MIGUEL", url: "https://saomigueldoaraguaia.safeconsig.com.br/safe/login" },
+    { nome: "SECURITIZADORA", url: "https://rcsecuritizadora.com.br/seguro/cliente-pf" },
+    { nome: "Consignet", url: "https://www.www1.consignet.com/auth/login" },
+  ];
+
+  function loadLinks() {
+    try {
+      const raw = localStorage.getItem(STORAGE_LINKS);
+      if (raw === null) return LINKS_PADRAO.slice();
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : LINKS_PADRAO.slice();
+    } catch {
+      return LINKS_PADRAO.slice();
+    }
+  }
+  function saveLinks(list) {
+    localStorage.setItem(STORAGE_LINKS, JSON.stringify(list));
+  }
+
+  function renderLinks() {
+    const list = loadLinks();
+    const box = document.getElementById("linksContainer");
+    if (!list.length) {
+      box.innerHTML = `
+        <div class="empty-state">
+          <p>Nenhum site cadastrado ainda.</p>
+          <small>Use o formulário acima para adicionar os links de consulta de margem.</small>
+        </div>`;
+      return;
+    }
+    box.innerHTML = `<div class="links-grid">${list.map((item, idx) => `
+      <div class="link-card">
+        <div class="link-card__name">${escapeHtml(item.nome)}</div>
+        <div class="link-card__url">${escapeHtml(item.url)}</div>
+        <div class="link-card__actions">
+          <a class="btn btn--primary btn--sm" href="${escapeAttr(item.url)}" target="_blank" rel="noopener">Abrir</a>
+          <button class="btn btn--ghost btn--sm" type="button" data-edit="${idx}">Editar</button>
+          <button class="btn btn--danger btn--sm" type="button" data-del="${idx}">Remover</button>
+        </div>
+      </div>
+    `).join("")}</div>`;
+
+    box.querySelectorAll("[data-del]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const i = parseInt(btn.dataset.del, 10);
+        const arr = loadLinks();
+        arr.splice(i, 1);
+        saveLinks(arr);
+        renderLinks();
+        showToast("Link removido");
+      });
+    });
+    box.querySelectorAll("[data-edit]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const i = parseInt(btn.dataset.edit, 10);
+        const arr = loadLinks();
+        const item = arr[i];
+        document.getElementById("novoLinkNome").value = item.nome;
+        document.getElementById("novoLinkUrl").value = item.url;
+        arr.splice(i, 1);
+        saveLinks(arr);
+        renderLinks();
+        document.getElementById("novoLinkNome").focus();
+        showToast("Editando… altere e clique em Salvar");
+      });
+    });
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+  }
+  function escapeAttr(s) {
+    return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+
+  document.getElementById("btnAddLink").addEventListener("click", () => {
+    const nome = document.getElementById("novoLinkNome").value.trim();
+    let url = document.getElementById("novoLinkUrl").value.trim();
+    if (!nome || !url) {
+      showToast("Preencha nome e URL");
+      return;
+    }
+    if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+    const arr = loadLinks();
+    arr.push({ nome, url });
+    saveLinks(arr);
+    document.getElementById("novoLinkNome").value = "";
+    document.getElementById("novoLinkUrl").value = "";
+    renderLinks();
+    showToast("Link salvo");
+  });
+
+  /* ================================================================
+     PLANILHAS GOOGLE SHEETS (com busca)
+     ================================================================ */
+  function loadPlanilhas() {
+    try {
+      const raw = localStorage.getItem(STORAGE_SHEETS);
+      if (raw === null) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
+  function savePlanilhas(list) {
+    localStorage.setItem(STORAGE_SHEETS, JSON.stringify(list));
+  }
+
+  function renderPlanilhas() {
+    const list = loadPlanilhas();
+    const termo = (document.getElementById("buscaPlanilha")?.value || "").trim().toLowerCase();
+    const filtradas = termo
+      ? list.filter(item => item.nome.toLowerCase().includes(termo) || item.url.toLowerCase().includes(termo))
+      : list;
+
+    const countEl = document.getElementById("planilhaCount");
+    if (countEl) {
+      if (!list.length) {
+        countEl.textContent = "";
+      } else if (termo) {
+        countEl.textContent = filtradas.length === 0
+          ? `Nenhuma planilha encontrada para “${termo}”`
+          : `${filtradas.length} de ${list.length} planilha${list.length !== 1 ? "s" : ""}`;
+      } else {
+        countEl.textContent = `${list.length} planilha${list.length !== 1 ? "s" : ""} cadastrada${list.length !== 1 ? "s" : ""}`;
+      }
+    }
+
+    const box = document.getElementById("planilhasContainer");
+    if (!list.length) {
+      box.innerHTML = `
+        <div class="empty-state">
+          <p>Nenhuma planilha cadastrada ainda.</p>
+          <small>Use o formulário acima para anexar links do Google Sheets e localizá-los rapidamente pela busca.</small>
+        </div>`;
+      return;
+    }
+    if (!filtradas.length) {
+      box.innerHTML = `
+        <div class="empty-state">
+          <p>Nenhuma planilha corresponde à busca.</p>
+          <small>Tente outro termo ou limpe a pesquisa.</small>
+        </div>`;
+      return;
+    }
+    box.innerHTML = `<div class="links-grid">${filtradas.map((item) => {
+      const idx = list.indexOf(item);
+      return `
+      <div class="link-card">
+        <div class="link-card__name">${escapeHtml(item.nome)}</div>
+        <div class="link-card__url">${escapeHtml(item.url)}</div>
+        <div class="link-card__actions">
+          <a class="btn btn--primary btn--sm" href="${escapeAttr(item.url)}" target="_blank" rel="noopener">Abrir</a>
+          <button class="btn btn--ghost btn--sm" type="button" data-edit-plan="${idx}">Editar</button>
+          <button class="btn btn--danger btn--sm" type="button" data-del-plan="${idx}">Remover</button>
+        </div>
+      </div>
+    `;
+    }).join("")}</div>`;
+
+    box.querySelectorAll("[data-del-plan]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const i = parseInt(btn.dataset.delPlan, 10);
+        const arr = loadPlanilhas();
+        arr.splice(i, 1);
+        savePlanilhas(arr);
+        renderPlanilhas();
+        showToast("Planilha removida");
+      });
+    });
+    box.querySelectorAll("[data-edit-plan]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const i = parseInt(btn.dataset.editPlan, 10);
+        const arr = loadPlanilhas();
+        const item = arr[i];
+        document.getElementById("novaPlanilhaNome").value = item.nome;
+        document.getElementById("novaPlanilhaUrl").value = item.url;
+        arr.splice(i, 1);
+        savePlanilhas(arr);
+        renderPlanilhas();
+        document.getElementById("novaPlanilhaNome").focus();
+        showToast("Editando… altere e clique em Salvar");
+      });
+    });
+  }
+
+  document.getElementById("btnAddPlanilha").addEventListener("click", () => {
+    const nome = document.getElementById("novaPlanilhaNome").value.trim();
+    let url = document.getElementById("novaPlanilhaUrl").value.trim();
+    if (!nome || !url) {
+      showToast("Preencha nome e URL da planilha");
+      return;
+    }
+    if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+    // Aviso leve se não parecer Google Sheets (não bloqueia)
+    if (!/docs\.google\.com\/spreadsheets/i.test(url) && !/sheets\.google\.com/i.test(url)) {
+      if (!confirm("O link não parece ser do Google Sheets. Deseja salvar mesmo assim?")) return;
+    }
+    const arr = loadPlanilhas();
+    arr.push({ nome, url });
+    savePlanilhas(arr);
+    document.getElementById("novaPlanilhaNome").value = "";
+    document.getElementById("novaPlanilhaUrl").value = "";
+    document.getElementById("buscaPlanilha").value = "";
+    renderPlanilhas();
+    showToast("Planilha salva");
+  });
+
+  document.getElementById("buscaPlanilha").addEventListener("input", () => {
+    renderPlanilhas();
+  });
+
+  /* ================================================================
+     SIMULADOR — motor de cálculo (seu código original)
+     ================================================================ */
+  const IOF_ADICIONAL = 0.0038;
+  const IOF_DIARIO = 0.000082;
+  const IOF_LIMITE_DIAS = 365;
+  const DIAS_POR_PARCELA = 30;
+
+  function arredondar(valor, casas = 2) {
+    const fator = Math.pow(10, casas);
+    return Math.round((valor + Number.EPSILON) * fator) / fator;
+  }
+  function formatarMoeda(valor) {
+    const numero = Number.isFinite(valor) ? valor : 0;
+    return numero.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+  }
+  function formatarPercentual(decimal, casas = 2) {
+    const numero = Number.isFinite(decimal) ? decimal : 0;
+    return (numero * 100).toLocaleString("pt-BR", { minimumFractionDigits: casas, maximumFractionDigits: casas }) + "%";
+  }
+  function parseMoeda(texto) {
+    if (typeof texto !== "string") return 0;
+    const limpo = texto.replace(/\./g, "").replace(",", ".").replace(/[^\d.-]/g, "");
+    const valor = parseFloat(limpo);
+    return Number.isFinite(valor) ? valor : 0;
+  }
+  function parseTaxa(texto) {
+    if (typeof texto !== "string") return 0;
+    const limpo = texto.replace(",", ".").replace(/[^\d.-]/g, "");
+    const valor = parseFloat(limpo);
+    return Number.isFinite(valor) ? valor : 0;
+  }
+  /* ================================================================
+     MARGEM DISPONÍVEL
+     ================================================================ */
+  const LIMITE_ENDIVIDAMENTO = 0.70;
+  const LIQUIDO_MINIMO = 1000;
+
+  const elsMargem = {
+    salario: document.getElementById("margemSalario"),
+    descontos: document.getElementById("margemDescontos"),
+    erroSalario: document.getElementById("erroMargemSalario"),
+    erroDescontos: document.getElementById("erroMargemDescontos"),
+    ncLista: document.getElementById("margemNaoConsideradosLista"),
+    btnAddNc: document.getElementById("btnAddNaoConsiderado"),
+    erroNc: document.getElementById("erroMargemNaoConsiderados"),
+    outVencimentoEfetivo: document.getElementById("margemOutVencimentoEfetivo"),
+    hero: document.getElementById("margemHero"),
+    outDisponivel: document.getElementById("margemOutDisponivel"),
+    outEndividamento: document.getElementById("margemOutEndividamento"),
+    outLiquido: document.getElementById("margemOutLiquido"),
+    outLimite70: document.getElementById("margemOutLimite70"),
+    outMargem70: document.getElementById("margemOutMargem70"),
+    outMargemLiquido: document.getElementById("margemOutMargemLiquido"),
+    banner: document.getElementById("margemStatusBanner"),
+    dot: document.getElementById("margemStatusDot"),
+    titulo: document.getElementById("margemStatusTitulo"),
+    motivo: document.getElementById("margemStatusMotivo"),
+  };
+
+  let ncRowSeq = 0;
+
+  function criarLinhaNaoConsiderado(valorInicial) {
+    ncRowSeq += 1;
+    const id = "margemNc_" + ncRowSeq;
+    const row = document.createElement("div");
+    row.className = "nc-row";
+    row.innerHTML =
+      '<div class="field__prefix">' +
+        '<span>R$</span>' +
+        '<input type="text" inputmode="decimal" placeholder="0,00" autocomplete="off" id="' + id + '" />' +
+      '</div>' +
+      '<button type="button" class="nc-row__remove" aria-label="Remover valor não considerado">Remover</button>';
+    elsMargem.ncLista.appendChild(row);
+    const input = row.querySelector("input");
+    if (valorInicial) input.value = valorInicial;
+    aplicarMascaraMoedaGenerica(input, calcularMargem);
+    row.querySelector(".nc-row__remove").addEventListener("click", () => {
+      row.remove();
+      calcularMargem();
+    });
+    return row;
+  }
+
+  function obterInputsNaoConsiderados() {
+    return Array.from(elsMargem.ncLista.querySelectorAll("input"));
+  }
+
+  function obterTotalNaoConsiderados() {
+    return obterInputsNaoConsiderados().reduce((soma, input) => soma + parseMoeda(input.value), 0);
+  }
+
+  function calcularMargemDisponivel(vencimentoEfetivo, descontos) {
+    const limite70 = arredondar(vencimentoEfetivo * LIMITE_ENDIVIDAMENTO);
+    const liquidoAtual = arredondar(vencimentoEfetivo - descontos);
+    const endividamento = vencimentoEfetivo > 0 ? descontos / vencimentoEfetivo : 0;
+    const margem70 = arredondar(limite70 - descontos);
+    const margemLiquido = arredondar(liquidoAtual - LIQUIDO_MINIMO);
+
+    const excedeu70 = endividamento > LIMITE_ENDIVIDAMENTO;
+    const abaixoLiquidoMinimo = liquidoAtual < LIQUIDO_MINIMO;
+    const bloqueado = excedeu70 || abaixoLiquidoMinimo;
+
+    let margemDisponivel = bloqueado ? 0 : Math.min(margem70, margemLiquido);
+    if (margemDisponivel < 0) margemDisponivel = 0;
+
+    let motivo = "";
+    if (excedeu70 && abaixoLiquidoMinimo) {
+      motivo = "Bloqueado: as duas regras foram ultrapassadas.";
+    } else if (excedeu70) {
+      motivo = "Bloqueado: endividamento superior a 70%.";
+    } else if (abaixoLiquidoMinimo) {
+      motivo = "Bloqueado: líquido abaixo de R$ 1.000,00.";
+    }
+
+    return {
+      limite70, liquidoAtual, endividamento, margem70, margemLiquido,
+      bloqueado, margemDisponivel, motivo,
+    };
+  }
+
+  function validarMargemCampos(vencimentosTotais, totalNaoConsiderados, vencimentoEfetivo, descontos) {
+    let valido = true;
+    elsMargem.erroSalario.textContent = "";
+    elsMargem.erroDescontos.textContent = "";
+    elsMargem.erroNc.textContent = "";
+    elsMargem.salario.classList.remove("is-invalid");
+    elsMargem.descontos.classList.remove("is-invalid");
+
+    if (!(vencimentosTotais > 0)) {
+      elsMargem.erroSalario.textContent = "Informe um valor de vencimentos totais maior que zero.";
+      elsMargem.salario.classList.add("is-invalid");
+      valido = false;
+    }
+    if (obterInputsNaoConsiderados().some((input) => parseMoeda(input.value) < 0)) {
+      elsMargem.erroNc.textContent = "Os valores não considerados não podem ser negativos.";
+      valido = false;
+    }
+    if (descontos < 0) {
+      elsMargem.erroDescontos.textContent = "Os descontos não podem ser negativos.";
+      elsMargem.descontos.classList.add("is-invalid");
+      valido = false;
+    }
+    if (valido && vencimentosTotais > 0 && totalNaoConsiderados >= vencimentosTotais) {
+      elsMargem.erroNc.textContent = "A soma dos valores não considerados não pode ser igual ou superior aos vencimentos totais.";
+      valido = false;
+    }
+    return valido;
+  }
+
+  function calcularMargem() {
+    const vencimentosTotais = parseMoeda(elsMargem.salario.value);
+    const totalNaoConsiderados = obterTotalNaoConsiderados();
+    const vencimentoEfetivo = Math.max(0, arredondar(vencimentosTotais - totalNaoConsiderados));
+    const descontos = parseMoeda(elsMargem.descontos.value);
+
+    elsMargem.outVencimentoEfetivo.textContent = formatarMoeda(vencimentoEfetivo);
+
+    if (!validarMargemCampos(vencimentosTotais, totalNaoConsiderados, vencimentoEfetivo, descontos)) {
+      elsMargem.outDisponivel.textContent = "R$ 0,00";
+      elsMargem.outEndividamento.textContent = "0,00%";
+      elsMargem.outLiquido.textContent = "R$ 0,00";
+      elsMargem.outLimite70.textContent = "R$ 0,00";
+      elsMargem.outMargem70.textContent = "R$ 0,00";
+      elsMargem.outMargemLiquido.textContent = "R$ 0,00";
+      elsMargem.hero.classList.remove("is-blocked");
+      elsMargem.banner.classList.remove("is-allowed", "is-blocked");
+      elsMargem.titulo.textContent = "Aguardando dados";
+      elsMargem.motivo.textContent = "Corrija os campos destacados para calcular.";
+      return;
+    }
+
+    const r = calcularMargemDisponivel(vencimentoEfetivo, descontos);
+
+    elsMargem.outDisponivel.textContent = formatarMoeda(r.margemDisponivel);
+    elsMargem.outEndividamento.textContent = formatarPercentual(r.endividamento);
+    elsMargem.outLiquido.textContent = formatarMoeda(r.liquidoAtual);
+    elsMargem.outLimite70.textContent = formatarMoeda(r.limite70);
+    elsMargem.outMargem70.textContent = formatarMoeda(r.margem70);
+    elsMargem.outMargemLiquido.textContent = formatarMoeda(r.margemLiquido);
+
+    elsMargem.hero.classList.toggle("is-blocked", r.bloqueado);
+    elsMargem.banner.classList.toggle("is-allowed", !r.bloqueado);
+    elsMargem.banner.classList.toggle("is-blocked", r.bloqueado);
+
+    if (r.bloqueado) {
+      elsMargem.titulo.textContent = "🔴 BLOQUEADO";
+      elsMargem.motivo.textContent = r.motivo;
+    } else {
+      elsMargem.titulo.textContent = "🟢 PERMITIDO";
+      elsMargem.motivo.textContent = r.margemDisponivel > 0
+        ? "Cliente pode assumir uma nova parcela até este valor."
+        : "Dentro das regras, porém sem margem adicional no momento.";
+    }
+  }
+
+  function calcularIOF(valorLiquido, parcelas) {
+    const prazoDias = Math.min(parcelas * DIAS_POR_PARCELA, IOF_LIMITE_DIAS);
+    const adicional = arredondar(valorLiquido * IOF_ADICIONAL);
+    const diario = arredondar(valorLiquido * IOF_DIARIO * prazoDias);
+    const total = arredondar(adicional + diario);
+    return { adicional, diario, total };
+  }
+  function calcularPrincipal(valorLiquido, iofTotal) {
+    return arredondar(valorLiquido + iofTotal);
+  }
+  function calcularParcelaPrice(principal, taxaMensalDecimal, parcelas) {
+    const fator = calcularFatorPrice(taxaMensalDecimal, parcelas);
+    if (fator === 0) return 0;
+    return arredondar(principal * fator);
+  }
+  function calcularFatorPrice(taxaMensalDecimal, parcelas) {
+    if (parcelas <= 0) return 0;
+    if (taxaMensalDecimal === 0) return 1 / parcelas;
+    return taxaMensalDecimal / (1 - Math.pow(1 + taxaMensalDecimal, -parcelas));
+  }
+  function calcularValorLiquido(parcela, taxaMensalDecimal, parcelas) {
+    if (parcela <= 0 || parcelas <= 0) return 0;
+    const prazoDias = Math.min(parcelas * DIAS_POR_PARCELA, IOF_LIMITE_DIAS);
+    const k = IOF_ADICIONAL + IOF_DIARIO * prazoDias;
+    const fatorPrice = calcularFatorPrice(taxaMensalDecimal, parcelas);
+    if (fatorPrice === 0) return 0;
+    const principal = parcela / fatorPrice;
+    const valorLiquido = principal / (1 + k);
+    return arredondar(valorLiquido);
+  }
+  function calcularValorTotal(parcela, parcelas) {
+    return arredondar(parcela * parcelas);
+  }
+  function calcularJuros(valorTotal, principal) {
+    return arredondar(valorTotal - principal);
+  }
+  function calcularCET(valorLiquido, parcela, parcelas) {
+    if (valorLiquido <= 0 || parcela <= 0 || parcelas <= 0) return 0;
+    if (parcelas === 1) return parcela / valorLiquido - 1;
+    const fluxo = (r) => {
+      let vp = 0;
+      for (let t = 1; t <= parcelas; t++) vp += parcela / Math.pow(1 + r, t);
+      return vp - valorLiquido;
+    };
+    const derivada = (r) => {
+      let d = 0;
+      for (let t = 1; t <= parcelas; t++) d += (-t * parcela) / Math.pow(1 + r, t + 1);
+      return d;
+    };
+    let r = 0.05;
+    let convergiu = false;
+    for (let iter = 0; iter < 100; iter++) {
+      const f = fluxo(r);
+      const fLinha = derivada(r);
+      if (Math.abs(fLinha) < 1e-12) break;
+      let rNovo = r - f / fLinha;
+      if (!Number.isFinite(rNovo) || rNovo <= -0.999999) rNovo = r / 2;
+      if (Math.abs(rNovo - r) < 1e-10) {
+        r = rNovo;
+        convergiu = true;
+        break;
+      }
+      r = rNovo;
+    }
+    if (convergiu && Number.isFinite(r)) return r;
+    let baixo = 0, alto = 5;
+    for (let iter = 0; iter < 200; iter++) {
+      const meio = (baixo + alto) / 2;
+      const valor = fluxo(meio);
+      if (Math.abs(valor) < 1e-8) return meio;
+      if (valor > 0) baixo = meio;
+      else alto = meio;
+    }
+    return (baixo + alto) / 2;
+  }
+  function calcularTaxaAnual(taxaMensalDecimal) {
+    return Math.pow(1 + taxaMensalDecimal, 12) - 1;
+  }
+  function gerarCronogramaPrice(principal, taxaMensalDecimal, parcelas, valorParcela) {
+    const cronograma = [];
+    let saldo = principal;
+    const i = taxaMensalDecimal;
+    for (let n = 1; n <= parcelas; n++) {
+      const jurosParcela = arredondar(saldo * i);
+      let amortizacao = arredondar(valorParcela - jurosParcela);
+      if (n === parcelas) amortizacao = arredondar(saldo);
+      saldo = arredondar(saldo - amortizacao);
+      if (n === parcelas) saldo = 0;
+      cronograma.push({
+        numero: n,
+        amortizacao,
+        juros: jurosParcela,
+        parcela: arredondar(amortizacao + jurosParcela),
+        saldo: Math.max(saldo, 0),
+      });
+    }
+    return cronograma;
+  }
+
+  const els = {
+    valorParcela: document.getElementById("valorParcela"),
+    parcelas: document.getElementById("parcelas"),
+    taxaMensal: document.getElementById("taxaMensal"),
+    erroValor: document.getElementById("erroValor"),
+    erroParcelas: document.getElementById("erroParcelas"),
+    erroTaxa: document.getElementById("erroTaxa"),
+    outCetMensal: document.getElementById("outCetMensal"),
+    outCetAnual: document.getElementById("outCetAnual"),
+    outValorLiquido: document.getElementById("outValorLiquido"),
+    outIof: document.getElementById("outIof"),
+    outPrincipal: document.getElementById("outPrincipal"),
+    outParcelasQtd: document.getElementById("outParcelasQtd"),
+    outParcela: document.getElementById("outParcela"),
+    outTaxaNominal: document.getElementById("outTaxaNominal"),
+    outTaxaAnual: document.getElementById("outTaxaAnual"),
+    outJuros: document.getElementById("outJuros"),
+    outValorTotal: document.getElementById("outValorTotal"),
+    outIofAdicional: document.getElementById("outIofAdicional"),
+    outIofDiario: document.getElementById("outIofDiario"),
+    corpoCronograma: document.getElementById("corpoCronograma"),
+    scheduleSubtitle: document.getElementById("scheduleSubtitle"),
+  };
+
+  const VALORES_PADRAO = { valorParcela: "1.000,00", parcelas: "60", taxaMensal: "5,00" };
+  let ultimoResultado = null;
+
+  function aplicarMascaraMoeda(input) {
+    input.addEventListener("input", () => {
+      let digitos = input.value.replace(/\D/g, "");
+      if (digitos.length === 0) digitos = "0";
+      digitos = digitos.replace(/^0+(?=\d)/, "");
+      const valor = parseInt(digitos || "0", 10) / 100;
+      input.value = valor.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      simular();
+    });
+  }
+  function aplicarMascaraMoedaGenerica(input, onChange) {
+    input.addEventListener("input", () => {
+      let digitos = input.value.replace(/\D/g, "");
+      if (digitos.length === 0) digitos = "0";
+      digitos = digitos.replace(/^0+(?=\d)/, "");
+      const valor = parseInt(digitos || "0", 10) / 100;
+      input.value = valor.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      if (typeof onChange === "function") onChange();
+    });
+  }
+  function aplicarMascaraTaxa(input) {
+    input.addEventListener("input", () => {
+      let valor = input.value.replace(/[^\d,]/g, "");
+      const partes = valor.split(",");
+      if (partes.length > 2) valor = partes[0] + "," + partes.slice(1).join("");
+      input.value = valor;
+      simular();
+    });
+  }
+  function validarCampos(valorParcela, parcelas, taxaMensal) {
+    let valido = true;
+    els.erroValor.textContent = "";
+    els.erroParcelas.textContent = "";
+    els.erroTaxa.textContent = "";
+    els.valorParcela.classList.remove("is-invalid");
+    els.parcelas.classList.remove("is-invalid");
+    els.taxaMensal.classList.remove("is-invalid");
+    if (!(valorParcela > 0)) {
+      els.erroValor.textContent = "Informe um valor maior que zero.";
+      els.valorParcela.classList.add("is-invalid");
+      valido = false;
+    }
+    if (!Number.isInteger(parcelas) || parcelas < 1 || parcelas > 360) {
+      els.erroParcelas.textContent = "Informe entre 1 e 360.";
+      els.parcelas.classList.add("is-invalid");
+      valido = false;
+    }
+    if (!(taxaMensal >= 0) || taxaMensal > 50) {
+      els.erroTaxa.textContent = "Informe entre 0% e 50%.";
+      els.taxaMensal.classList.add("is-invalid");
+      valido = false;
+    }
+    return valido;
+  }
+  function simular() {
+    const valorParcelaDesejada = parseMoeda(els.valorParcela.value);
+    const parcelas = parseInt(els.parcelas.value, 10);
+    const taxaMensalPercentual = parseTaxa(els.taxaMensal.value);
+    const taxaMensalDecimal = taxaMensalPercentual / 100;
+    if (!validarCampos(valorParcelaDesejada, parcelas, taxaMensalPercentual)) {
+      limparResultados();
+      ultimoResultado = null;
+      return;
+    }
+    const valorLiquido = calcularValorLiquido(valorParcelaDesejada, taxaMensalDecimal, parcelas);
+    const iof = calcularIOF(valorLiquido, parcelas);
+    const principal = calcularPrincipal(valorLiquido, iof.total);
+    const parcela = calcularParcelaPrice(principal, taxaMensalDecimal, parcelas);
+    const valorTotal = calcularValorTotal(parcela, parcelas);
+    const juros = calcularJuros(valorTotal, principal);
+    const cetMensal = calcularCET(valorLiquido, parcela, parcelas);
+    const cetAnual = calcularTaxaAnual(cetMensal);
+    const taxaNominalAnual = calcularTaxaAnual(taxaMensalDecimal);
+    const cronograma = gerarCronogramaPrice(principal, taxaMensalDecimal, parcelas, parcela);
+    ultimoResultado = {
+      valorLiquido, iof, principal, parcela, parcelas, valorTotal, juros,
+      cetMensal, cetAnual, taxaMensalPercentual, taxaNominalAnual,
+      valorParcelaInput: els.valorParcela.value,
+      taxaInput: els.taxaMensal.value
+    };
+    renderizarResultados(ultimoResultado);
+    renderizarCronograma(cronograma);
+  }
+  function limparResultados() {
+    els.outCetMensal.textContent = "—";
+    els.outCetAnual.textContent = "—";
+    els.outValorLiquido.textContent = "R$ 0,00";
+    els.outIof.textContent = "R$ 0,00";
+    els.outPrincipal.textContent = "R$ 0,00";
+    els.outParcelasQtd.textContent = "0";
+    els.outParcela.textContent = "R$ 0,00";
+    els.outTaxaNominal.textContent = "0,00% a.m.";
+    els.outTaxaAnual.textContent = "0,00%";
+    els.outJuros.textContent = "R$ 0,00";
+    els.outValorTotal.textContent = "R$ 0,00";
+    els.outIofAdicional.textContent = "R$ 0,00";
+    els.outIofDiario.textContent = "R$ 0,00";
+    els.corpoCronograma.innerHTML = "";
+    els.scheduleSubtitle.textContent = "Corrija os campos para gerar o cronograma.";
+  }
+  function renderizarResultados(dados) {
+    els.outCetMensal.textContent = formatarPercentual(dados.cetMensal);
+    els.outCetAnual.textContent = formatarPercentual(dados.cetAnual);
+    els.outValorLiquido.textContent = formatarMoeda(dados.valorLiquido);
+    els.outIof.textContent = formatarMoeda(dados.iof.total);
+    els.outPrincipal.textContent = formatarMoeda(dados.principal);
+    els.outParcelasQtd.textContent = String(dados.parcelas);
+    els.outParcela.textContent = formatarMoeda(dados.parcela);
+    els.outTaxaNominal.textContent = dados.taxaMensalPercentual.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "% a.m.";
+    els.outTaxaAnual.textContent = formatarPercentual(dados.taxaNominalAnual);
+    els.outJuros.textContent = formatarMoeda(dados.juros);
+    els.outValorTotal.textContent = formatarMoeda(dados.valorTotal);
+    els.outIofAdicional.textContent = formatarMoeda(dados.iof.adicional);
+    els.outIofDiario.textContent = formatarMoeda(dados.iof.diario);
+  }
+  function renderizarCronograma(cronograma) {
+    const linhas = cronograma.map((item) => `
+      <tr>
+        <td>${item.numero}</td>
+        <td>${formatarMoeda(item.amortizacao)}</td>
+        <td>${formatarMoeda(item.juros)}</td>
+        <td>${formatarMoeda(item.parcela)}</td>
+        <td>${formatarMoeda(item.saldo)}</td>
+      </tr>
+    `).join("");
+    els.corpoCronograma.innerHTML = linhas;
+    els.scheduleSubtitle.textContent = `Projeção considerando parcelas de ${formatarMoeda(cronograma[0]?.parcela || 0)}`;
+  }
+  function limparSimulacao() {
+    els.valorParcela.value = "0,00";
+    els.parcelas.value = VALORES_PADRAO.parcelas;
+    els.taxaMensal.value = VALORES_PADRAO.taxaMensal;
+    limparResultados();
+    ultimoResultado = null;
+  }
+
+  /* ================================================================
+     HISTÓRICO
+     ================================================================ */
+  function loadHist() {
+    try {
+      const raw = localStorage.getItem(STORAGE_HIST);
+      return raw ? JSON.parse(raw) : [];
+    } catch { return []; }
+  }
+  function saveHist(list) {
+    localStorage.setItem(STORAGE_HIST, JSON.stringify(list.slice(0, MAX_HIST)));
+  }
+  function salvarNoHistorico() {
+    if (!ultimoResultado) {
+      showToast("Faça uma simulação válida primeiro");
+      return;
+    }
+    const entry = {
+      ts: Date.now(),
+      data: new Date().toLocaleString("pt-BR"),
+      parcela: ultimoResultado.parcela,
+      parcelas: ultimoResultado.parcelas,
+      taxa: ultimoResultado.taxaMensalPercentual,
+      liberado: ultimoResultado.valorLiquido,
+      cetMensal: ultimoResultado.cetMensal,
+      inputs: {
+        valorParcela: ultimoResultado.valorParcelaInput,
+        parcelas: String(ultimoResultado.parcelas),
+        taxa: ultimoResultado.taxaInput
+      }
+    };
+    const arr = loadHist();
+    arr.unshift(entry);
+    saveHist(arr);
+    showToast("Simulação salva no histórico");
+  }
+  function renderHistorico() {
+    const list = loadHist();
+    const box = document.getElementById("histContainer");
+    if (!list.length) {
+      box.innerHTML = `
+        <div class="empty-state">
+          <p>Nenhuma simulação salva ainda.</p>
+          <small>No Simulador, clique em “Salvar no histórico” após calcular.</small>
+        </div>`;
+      return;
+    }
+    box.innerHTML = list.map((item, idx) => `
+      <div class="hist-item">
+        <div>
+          <div class="hist-item__meta">${escapeHtml(item.data)}</div>
+          <div class="hist-item__values">
+            Parcela ${formatarMoeda(item.parcela)} · ${item.parcelas}x · Taxa ${item.taxa.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2})}% · Liberado ${formatarMoeda(item.liberado)} · CET ${formatarPercentual(item.cetMensal)}
+          </div>
+        </div>
+        <div class="hist-item__actions">
+          <button class="btn btn--primary btn--sm" type="button" data-reopen="${idx}">Reabrir</button>
+          <button class="btn btn--danger btn--sm" type="button" data-hdel="${idx}">Remover</button>
+        </div>
+      </div>
+    `).join("");
+    box.querySelectorAll("[data-reopen]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const i = parseInt(btn.dataset.reopen, 10);
+        const item = loadHist()[i];
+        if (!item) return;
+        els.valorParcela.value = item.inputs.valorParcela;
+        els.parcelas.value = item.inputs.parcelas;
+        els.taxaMensal.value = item.inputs.taxa;
+        switchTab("simulador");
+        simular();
+        showToast("Simulação reaberta");
+      });
+    });
+    box.querySelectorAll("[data-hdel]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const i = parseInt(btn.dataset.hdel, 10);
+        const arr = loadHist();
+        arr.splice(i, 1);
+        saveHist(arr);
+        renderHistorico();
+        showToast("Removido do histórico");
+      });
+    });
+  }
+  document.getElementById("btnLimparHist").addEventListener("click", () => {
+    if (confirm("Limpar todo o histórico?")) {
+      saveHist([]);
+      renderHistorico();
+      showToast("Histórico limpo");
+    }
+  });
+
+  /* ================================================================
+     CALCULADORA FLUTUANTE (LÓGICA)
+     ================================================================ */
+  const calcPopup = document.getElementById("calcPopup");
+  const calcToggleBtn = document.getElementById("calcToggleBtn");
+  const calcCloseBtn = document.getElementById("calcCloseBtn");
+  const calcDisplay = document.getElementById("calcDisplay");
+
+  let calcExpr = "";
+
+  calcToggleBtn.addEventListener("click", () => {
+    calcPopup.classList.toggle("is-open");
+  });
+
+  calcCloseBtn.addEventListener("click", () => {
+    calcPopup.classList.remove("is-open");
+  });
+
+  function calcAppend(val) {
+    if (calcExpr === "0" && val !== ".") {
+      calcExpr = "";
+    }
+    calcExpr += val;
+    calcUpdateDisplay();
+  }
+
+  function calcClear() {
+    calcExpr = "";
+    calcUpdateDisplay();
+  }
+
+  function calcBackspace() {
+    calcExpr = calcExpr.slice(0, -1);
+    calcUpdateDisplay();
+  }
+
+  function calcUpdateDisplay() {
+    calcDisplay.value = calcExpr === "" ? "0" : calcExpr;
+  }
+
+  function calcCalculate() {
+    try {
+      if (!calcExpr) return;
+      const res = eval(calcExpr);
+      calcExpr = String(res);
+      calcUpdateDisplay();
+    } catch {
+      calcDisplay.value = "Erro";
+      calcExpr = "";
+    }
+  }
+
+  /* ================================================================
+     ASSISTENTE IA (Gemini)
+     ================================================================ */
+  const IA_STORAGE_KEY = "facilita_gemini_api_key";
+  const IA_HISTORY_KEY = "facilita_gemini_chat_history";
+  const IA_MODEL = "gemini-3.6-flash";
+
+  const elsIa = {
+    apiKeyInput: document.getElementById("iaApiKey"),
+    btnSalvarKey: document.getElementById("btnSalvarIaKey"),
+    btnLimparKey: document.getElementById("btnLimparIaKey"),
+    keyStatus: document.getElementById("iaKeyStatus"),
+    chatWindow: document.getElementById("iaChatWindow"),
+    input: document.getElementById("iaInput"),
+    btnEnviar: document.getElementById("btnIaEnviar"),
+    btnLimparChat: document.getElementById("btnIaLimparChat"),
+    erro: document.getElementById("erroIaChat"),
+  };
+
+  function iaGetKey() {
+    return localStorage.getItem(IA_STORAGE_KEY) || "";
+  }
+  function iaGetHistorico() {
+    try {
+      return JSON.parse(localStorage.getItem(IA_HISTORY_KEY) || "[]");
+    } catch (e) {
+      return [];
+    }
+  }
+  function iaSalvarHistorico(hist) {
+    localStorage.setItem(IA_HISTORY_KEY, JSON.stringify(hist));
+  }
+  function iaAtualizarStatusChave() {
+    const key = iaGetKey();
+    elsIa.keyStatus.textContent = key
+      ? "Chave configurada neste navegador (" + key.slice(0, 4) + "•••" + key.slice(-4) + ")."
+      : "Nenhuma chave configurada ainda.";
+  }
+  function iaAdicionarMensagemDOM(role, texto) {
+    const bubble = document.createElement("div");
+    bubble.className = "ia-msg " + (role === "user" ? "ia-msg--user" : role === "error" ? "ia-msg--error" : "ia-msg--assistant");
+    bubble.textContent = texto;
+    elsIa.chatWindow.appendChild(bubble);
+    elsIa.chatWindow.scrollTop = elsIa.chatWindow.scrollHeight;
+  }
+  function iaRenderHistoricoCompleto() {
+    elsIa.chatWindow.innerHTML = "";
+    iaGetHistorico().forEach((msg) => {
+      iaAdicionarMensagemDOM(msg.role === "model" ? "assistant" : "user", msg.parts[0].text);
+    });
+  }
+
+  async function iaEnviarMensagem() {
+    const texto = elsIa.input.value.trim();
+    elsIa.erro.textContent = "";
+    if (!texto) return;
+    const key = iaGetKey();
+    if (!key) {
+      elsIa.erro.textContent = "Configure sua chave da API do Gemini acima antes de enviar mensagens.";
+      return;
+    }
+
+    const hist = iaGetHistorico();
+    hist.push({ role: "user", parts: [{ text: texto }] });
+    iaAdicionarMensagemDOM("user", texto);
+    elsIa.input.value = "";
+    elsIa.btnEnviar.disabled = true;
+    elsIa.btnEnviar.textContent = "Enviando...";
+
+    try {
+      const url = "https://generativelanguage.googleapis.com/v1beta/models/" + IA_MODEL + ":generateContent?key=" + encodeURIComponent(key);
+      const resp = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contents: hist }),
+      });
+      const data = await resp.json();
+      if (!resp.ok) {
+        const msg = (data && data.error && data.error.message) || ("Erro HTTP " + resp.status);
+        throw new Error(msg);
+      }
+      const candidato = data && data.candidates && data.candidates[0];
+      const respostaTexto = candidato && candidato.content && candidato.content.parts && candidato.content.parts[0] && candidato.content.parts[0].text
+        ? candidato.content.parts[0].text
+        : "(Sem resposta do modelo.)";
+
+      hist.push({ role: "model", parts: [{ text: respostaTexto }] });
+      iaSalvarHistorico(hist);
+      iaAdicionarMensagemDOM("assistant", respostaTexto);
+    } catch (err) {
+      iaAdicionarMensagemDOM("error", "Falha ao consultar o Gemini: " + err.message);
+    } finally {
+      elsIa.btnEnviar.disabled = false;
+      elsIa.btnEnviar.textContent = "Enviar";
+    }
+  }
+
+  function initIA() {
+    elsIa.apiKeyInput.value = iaGetKey();
+    iaAtualizarStatusChave();
+    iaRenderHistoricoCompleto();
+
+    elsIa.btnSalvarKey.addEventListener("click", () => {
+      const valor = elsIa.apiKeyInput.value.trim();
+      if (!valor) {
+        elsIa.keyStatus.textContent = "Informe uma chave válida antes de salvar.";
+        return;
+      }
+      localStorage.setItem(IA_STORAGE_KEY, valor);
+      iaAtualizarStatusChave();
+      showToast("Chave do Gemini salva neste navegador");
+    });
+    elsIa.btnLimparKey.addEventListener("click", () => {
+      localStorage.removeItem(IA_STORAGE_KEY);
+      elsIa.apiKeyInput.value = "";
+      iaAtualizarStatusChave();
+      showToast("Chave removida");
+    });
+    elsIa.btnEnviar.addEventListener("click", iaEnviarMensagem);
+    elsIa.input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") iaEnviarMensagem();
+    });
+    elsIa.btnLimparChat.addEventListener("click", () => {
+      iaSalvarHistorico([]);
+      elsIa.chatWindow.innerHTML = "";
+    });
+  }
+
+  /* ================================================================
+     INIT
+     ================================================================ */
+  function initApp() {
+    renderLinks();
+    aplicarMascaraMoeda(els.valorParcela);
+    aplicarMascaraTaxa(els.taxaMensal);
+    els.parcelas.addEventListener("input", simular);
+    simular();
+
+    aplicarMascaraMoedaGenerica(elsMargem.salario, calcularMargem);
+    aplicarMascaraMoedaGenerica(elsMargem.descontos, calcularMargem);
+    elsMargem.btnAddNc.addEventListener("click", () => {
+      criarLinhaNaoConsiderado();
+      calcularMargem();
+    });
+    criarLinhaNaoConsiderado();
+    calcularMargem();
+
+    initIA();
+
+    renderTopbarActions("links");
+    // Planilhas são renderizadas sob demanda ao abrir a aba
+  }
+  </script>
+</body>
+</html>
